@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Web Calculator</title>
+    <style>
+        /* Add your CSS styles for the calculator here */
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="expression" placeholder="Enter your expression">
+        <button onclick="calculate()">Calculate</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            var expression = document.getElementById('expression').value;
+            fetch('/calculate', {
+                method: 'POST',
+                body: new URLSearchParams({ expression: expression }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('result').innerText = 'Result: ' + data.result;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
